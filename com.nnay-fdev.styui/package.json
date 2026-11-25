@@ -1,0 +1,15 @@
+{
+  "name": "com.nnay-fdev.styui",
+  "version": "0.3.0",
+  "displayName": "StyUI",
+  "unity": "2022.3",
+  "dependencies": {
+    "com.unity.ugui": "1.0.0"
+  },
+  "description": "An UI Library To Make Dialog Boxes Easier To Use",
+  "author": {
+    "name": "nnay-fdev",
+    "url": "https://github.com/nnay-fdev"
+  },
+  "licensesUrl": "https://www.gnu.org/licenses/gpl-3.0.en.html"
+}
