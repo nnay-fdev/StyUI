@@ -42,7 +42,7 @@ namespace StyUI
 
         private void Start()
         {
-            StartCoroutine(WriteTextRoutine());
+            StartCoroutine(mode == WriteTextMode.BreakToList ? WriteListRoutine() : WriteTextRoutine());
         }
 
         // WriteTextMode.SingleObject | WriteTextMode.BreakToChars
@@ -151,6 +151,45 @@ namespace StyUI
 
                     break;
                 }
+            }
+        }
+        
+        // WriteTextMode.BreakToList
+        // Creates GameObject for each List entry
+        private IEnumerator WriteListRoutine() 
+        {
+            if (mode != WriteTextMode.BreakToList) yield break;
+
+            var nextPosition = position;
+            foreach (var str in texts)
+            {
+                var tObj = new GameObject("Typewriter-TextObject", typeof(RectTransform), typeof(TextMeshProUGUI));
+                
+                var tRect = tObj.transform as RectTransform;
+                var tMesh = tObj.GetComponent<TextMeshProUGUI>();
+                
+                tRect.SetParent(transform, false);
+                
+                tRect.anchorMin = anchorMin;
+                tRect.anchorMax = anchorMax;
+                
+                tRect.anchoredPosition = nextPosition;
+                
+                tMesh.font     = font;
+                tMesh.color    = color;
+                tMesh.fontSize = fontSize;
+
+                foreach (var chr in str)
+                {
+                    tMesh.text += chr;
+                    
+                    OnCharWrite?.Invoke(tObj);
+                    if (charDelay > 0)
+                        yield return new WaitForSeconds(charDelay);
+                }
+                
+                nextPosition.x += tMesh.preferredWidth;
+                yield return new WaitForSeconds(wordDelay);
             }
         }
     }
