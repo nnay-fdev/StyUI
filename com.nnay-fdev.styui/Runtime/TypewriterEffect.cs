@@ -56,8 +56,8 @@ namespace StyUI
                 case WriteTextMode.SingleObject:
                 {
                     var tObj  = new GameObject("Typewriter-TextObject", typeof(RectTransform), typeof(TextMeshProUGUI));
-                
-                    var tRect = tObj.GetComponent<RectTransform>();
+
+                    var tRect = tObj.transform as RectTransform;
                     var tMesh = tObj.GetComponent<TextMeshProUGUI>();
 
                     tMesh.font     = font;
@@ -96,7 +96,7 @@ namespace StyUI
                         var tObj = new GameObject("Typewriter-TextObject", typeof(RectTransform),
                             typeof(TextMeshProUGUI));
 
-                        var tRect = tObj.GetComponent<RectTransform>();
+                        var tRect = tObj.transform as RectTransform;
                         var tMesh = tObj.GetComponent<TextMeshProUGUI>();
 
                         tMesh.font     = font;
