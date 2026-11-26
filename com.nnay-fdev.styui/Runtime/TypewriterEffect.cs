@@ -95,6 +95,27 @@ namespace StyUI
                         var tRect = tObj.GetComponent<RectTransform>();
                         var tMesh = tObj.GetComponent<TextMeshProUGUI>();
 
+                        if (chr == '\\')
+                        {
+                            // get next char
+                            chr = text[++index];
+
+                            // if it's a newline
+                            if (chr is 'n' or 'N')
+                            {
+                                nextPosition.x = position.x;
+                                nextPosition.y -= fontSize;
+                                
+                                // no need tObj
+                                Destroy(tObj);
+                                
+                                continue;
+                            }
+                        }
+                        
+                        else 
+                            tMesh.text = chr.ToString();
+                        
                         tRect.SetParent(transform, false);
 
                         tRect.anchorMin = anchorMin;
@@ -102,31 +123,18 @@ namespace StyUI
 
                         tRect.anchoredPosition = nextPosition;
 
-                        if (chr == '\\')
-                        {
-                            // get next char
-                            chr = text[++index];
-
-                            print(chr);
-                            
-                            // if it's a newline
-                            if (chr is 'n' or 'N')
-                            {
-                                nextPosition.x = position.x;
-                                nextPosition.y -= fontSize;
-                            }
-                        }
-                        
-                        else 
-                            tMesh.text = chr.ToString();
-
                         tMesh.ForceMeshUpdate();
 
                         if (chr == ' ')
+                        {
                             nextPosition.x += spaceWidth;
+                            
+                            // don't need tObj
+                            Destroy(tObj);
+                            continue;
+                        }
                         
-                        else
-                            nextPosition.x += tMesh.preferredWidth;
+                        nextPosition.x += tMesh.preferredWidth;
 
                         OnCharWrite?.Invoke(tObj);
                         if (charDelay > 0)
