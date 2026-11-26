@@ -46,7 +46,7 @@ namespace StyUI
         }
 
         // WriteTextMode.SingleObject | WriteTextMode.BreakToChars
-        private IEnumerator WriteTextRoutine()
+        private IEnumerator WriteTextRoutine() 
         {
             switch (mode)
             {
@@ -60,6 +60,10 @@ namespace StyUI
                     var tRect = tObj.GetComponent<RectTransform>();
                     var tMesh = tObj.GetComponent<TextMeshProUGUI>();
 
+                    tMesh.font     = font;
+                    tMesh.color    = color;
+                    tMesh.fontSize = fontSize;
+                    
                     tRect.SetParent(transform, false);
                     
                     tRect.sizeDelta = scale;
@@ -95,6 +99,10 @@ namespace StyUI
                         var tRect = tObj.GetComponent<RectTransform>();
                         var tMesh = tObj.GetComponent<TextMeshProUGUI>();
 
+                        tMesh.font     = font;
+                        tMesh.color    = color;
+                        tMesh.fontSize = fontSize;
+                        
                         if (chr == '\\')
                         {
                             // get next char
@@ -122,7 +130,7 @@ namespace StyUI
                         tRect.anchorMax = anchorMax;
 
                         tRect.anchoredPosition = nextPosition;
-
+                        
                         tMesh.ForceMeshUpdate();
 
                         if (chr == ' ')
