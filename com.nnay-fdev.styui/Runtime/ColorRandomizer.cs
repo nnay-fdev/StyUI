@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
 
 namespace StyUI
 {
@@ -14,11 +16,12 @@ namespace StyUI
     {
         LerpBetween,
         ChangeImmediately,
+        FromList,
     }
     
     public class ColorRandomizer : MonoBehaviour
     {
-        private Coroutine _lerpRoutine, _changeRoutine;
+        private Coroutine _lerpRoutine, _changeRoutine, _listRoutine;
 
         private bool _lerping;
         
@@ -31,6 +34,9 @@ namespace StyUI
         public ColorRandomizerType randomizeType = ColorRandomizerType.LerpBetween;
         public Color rangeMin                    = Color.black, rangeMax = Color.white;
 
+        public List<Color> colors;
+        
+        
         public float lerpTime;
         public float delay = 0.1f; // 100 miliseconds
 
@@ -49,9 +55,15 @@ namespace StyUI
             
             else if (_changeRoutine != null)
                 StopCoroutine(_changeRoutine);
+            
+            if (randomizeType == ColorRandomizerType.FromList)
+                _listRoutine  ??= StartCoroutine(ListRandomizer());
+            
+            else if (_listRoutine != null)
+                StopCoroutine(_listRoutine);
         }
         
-        private IEnumerator Lerp()
+        private IEnumerator Lerp()   
         {
             while (randomizeType == ColorRandomizerType.LerpBetween)
             {
@@ -99,6 +111,36 @@ namespace StyUI
                         Debug.LogWarning($"Unknown typeof target: {target}");
                         break;
                 }
+                
+                if (delay > 0)
+                    yield return new WaitForSeconds(delay);
+            }
+        }
+
+        private IEnumerator ListRandomizer() 
+        {
+            if (colors.Count == 0) yield break;
+            
+            while (randomizeType == ColorRandomizerType.FromList)
+            {
+                var color = colors[Random.Range(0, colors.Count)];
+
+                switch (target)
+                {
+                    case ColorRandomizerTarget.TextMeshProUGUI:
+                        ColorUtility.Instance.LerpInSeconds(targetTextMesh, color, lerpTime);
+                        break;
+                    
+                    case ColorRandomizerTarget.SpriteRenderer:
+                        ColorUtility.Instance.LerpInSeconds(targetSpriteRenderer, color, lerpTime);
+                        break;
+                    
+                    default:
+                        print($"unknown typeof target: {target}");
+                        break;
+                }
+                
+                yield return new WaitForSeconds(lerpTime);
                 
                 if (delay > 0)
                     yield return new WaitForSeconds(delay);
