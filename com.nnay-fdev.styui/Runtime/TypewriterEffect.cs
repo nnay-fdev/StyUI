@@ -35,8 +35,6 @@ namespace StyUI
         public  Vector2 scale;
         public  Vector2 anchorMin, anchorMax;
         
-        private Vector2 _lastCharPosition;
-        
         public event Action<GameObject> OnCharWrite;
 
 
